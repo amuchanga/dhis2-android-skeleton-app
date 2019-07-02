@@ -225,6 +225,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /*TODO Add program navigation*/
 
+        if (id == R.id.navPrograms) {
+
+            ActivityStarter.startActivity(this,ProgramsActivity.class,true);
+        } else
         if (id == R.id.navWipeData) {
             syncStatusText.setText(R.string.wiping_data);
             wipeData();

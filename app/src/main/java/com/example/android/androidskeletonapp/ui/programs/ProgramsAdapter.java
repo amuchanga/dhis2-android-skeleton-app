@@ -3,8 +3,10 @@ package com.example.android.androidskeletonapp.ui.programs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.service.StyleBinderHelper;
 import com.example.android.androidskeletonapp.ui.base.DiffByIdItemCallback;
 import com.example.android.androidskeletonapp.ui.base.ListItemWithStyleHolder;
 
@@ -32,6 +34,16 @@ public class ProgramsAdapter extends PagedListAdapter<Program, ListItemWithStyle
 
     @Override
     public void onBindViewHolder(@NonNull ListItemWithStyleHolder holder, int position) {
+
+Program program = getItem(position);
+
+holder.title.setText(program.shortName());
+holder.subtitle1.setText(program.programStages().size()+" Program Stages");
+
+
+        StyleBinderHelper.bindStyle(holder,program.style());
+
+
         // TODO Bind view holder
         // TODO Set on click listener
     }
