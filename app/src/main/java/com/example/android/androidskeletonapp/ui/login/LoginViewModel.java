@@ -1,15 +1,22 @@
 package com.example.android.androidskeletonapp.ui.login;
 
 import android.util.Patterns;
+import android.widget.Toast;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.Sdk;
 
+import org.hisp.dhis.android.core.d2manager.D2Manager;
 import org.hisp.dhis.android.core.user.User;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import io.reactivex.Completable;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginViewModel extends ViewModel {
 
@@ -44,7 +51,14 @@ public class LoginViewModel extends ViewModel {
     public Single<User> setServerUrlAndLogin(String username, String password, String serverUrl) {
         // TODO Set server url and login
 
-        return null;
+     //   Completable completable = D2Manager.setServerUrl(serverUrl);
+        //return D2Manager.setServerUrl(serverUrl).andThen(Single.defer(() -> Sdk.d2().userModule().logIn(username, password)));
+        return D2Manager.setServerUrl(serverUrl)
+                .andThen(D2Manager.instantiateD2())
+                .flatMap(d2 -> Sdk.d2().userModule().logIn(username, password))
+                .subscribeOn(Schedulers.io());
+
+
     }
 
     void loginDataChanged(String serverUrl, String username, String password) {
