@@ -21,11 +21,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.hisp.dhis.android.core.arch.call.D2Progress;
 import org.hisp.dhis.android.core.common.Unit;
+import org.hisp.dhis.android.core.maintenance.D2Error;
 import org.hisp.dhis.android.core.user.User;
 
 import java.text.MessageFormat;
 
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         syncStatusText = findViewById(R.id.notificator);
         progressBar = findViewById(R.id.syncProgressBar);
 
+
         syncMetadataButton.setOnClickListener(view -> {
             setSyncing();
             Snackbar.make(view, "Syncing metadata", Snackbar.LENGTH_LONG)
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setSyncing() {
         isSyncing = true;
+
         progressBar.setVisibility(View.VISIBLE);
         syncStatusText.setVisibility(View.VISIBLE);
         updateSyncDataAndButtons();
@@ -197,8 +201,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private Observable<D2Progress> syncMetadataObservable() {
-        // TODO Sync user metadata
-        return Observable.never();
+
+        return  Sdk.d2().syncMetaData();
+
     }
 
     private void downloadData() {
@@ -213,11 +218,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Observable<D2Progress> downloadDataObservable() {
         return Observable.merge(
-                // TODO Download trackedEntityInstances
-                Observable.never(),
+                // Download trackedEntityInstances
 
-                // TODO Aggregated data values
-                Observable.never()
+                Sdk.d2().trackedEntityModule().downloadTrackedEntityInstances(100,false,false),
+
+                // Aggregated data values
+                Sdk.d2().aggregatedModule().data().download()
         );
     }
 
@@ -231,9 +237,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .subscribe());
     }
 
-    private Unit wipeDataCall() {
-        // TODO Wipe data
-        return new Unit();
+    private Unit wipeDataCall() throws D2Error {
+
+
+            return Sdk.d2().wipeModule().wipeMetadata();
+
+
     }
 
     @Override
