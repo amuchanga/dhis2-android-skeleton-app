@@ -41,8 +41,8 @@ public class TrackedEntityInstancesActivity extends ListActivity {
         selectedProgram = getIntent().getStringExtra(IntentExtra.PROGRAM.name());
         compositeDisposable = new CompositeDisposable();
 
-        // TODO Uncomment this method to trigger trackedEntitySearch
-        // observeTrackedEntityInstances();
+        //  Uncomment this method to trigger trackedEntitySearch
+         observeTrackedEntityInstances();
     }
 
     private void observeTrackedEntityInstances() {
@@ -57,11 +57,11 @@ public class TrackedEntityInstancesActivity extends ListActivity {
     }
 
     private TrackedEntityInstanceCollectionRepository getTeiRepository() {
-        // TODO Get TrackedEntityInstanceRepository to show trackedEntityInstances with Attributes
+        //  Get TrackedEntityInstanceRepository to show trackedEntityInstances with Attributes
         TrackedEntityInstanceCollectionRepository teiRepository = null;
 
         if (!isEmpty(selectedProgram)) {
-            // TODO If program is selected, filter by program uid
+            //  If program is selected, filter by program uid
             return teiRepository;
         } else {
             return teiRepository;

@@ -230,14 +230,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.navPrograms) {
             ActivityStarter.startActivity(this, ProgramsActivity.class,false);
-        } else if (id == R.id.navTrackedEntities) {
+        }
+
+        else if (id == R.id.navTrackedEntities) {
             ActivityStarter.startActivity(this, TrackedEntityInstancesActivity.class,false);
         } else if (id == R.id.navTrackedEntitiesSearch) {
             ActivityStarter.startActivity(this, TrackedEntityInstanceSearchActivity.class, false);
         } else if (id == R.id.navWipeData) {
             syncStatusText.setText(R.string.wiping_data);
             wipeData();
-        } else if (id == R.id.navExit) {
+        }
+        else if (id == R.id.navExit) {
             compositeDisposable.add(logOut(this));
         }
 
