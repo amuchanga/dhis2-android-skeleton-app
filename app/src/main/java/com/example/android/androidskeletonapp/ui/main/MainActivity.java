@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void inflateMainView() {
         syncMetadataButton = findViewById(R.id.syncMetadataButton);
         syncDataButton = findViewById(R.id.syncDataButton);
-        // TODO bind uploadDataButton to "uploadDataButton" view
+        //  bind uploadDataButton to "uploadDataButton" view
         uploadDataButton = findViewById(R.id.uploadDataButton);
 
         syncStatusText = findViewById(R.id.notificator);
@@ -118,10 +118,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        // TODO Listen to uploadDataButton and execute these actions:
+        //  Listen to uploadDataButton and execute these actions:
         //DOne
 
-        // TODO Set syncing
+        //  Set syncing
 
         uploadDataButton.setOnClickListener(view -> {
             setSyncing();
@@ -140,11 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         });
-        // TODO Show a snackbar to notify about the action
 
-        // TODO trigger data upload and subscribe (do not subscribe on the main thread!!!)
-        // TODO You have to use, at least: subscribeOn(), observeOn(), doOnComplete(), subscribe()
-        // TODO Call setSyncFinished on complete
 
 
 
@@ -171,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setEnabledButton(syncMetadataButton, false);
         setEnabledButton(syncDataButton, false);
         setEnabledButton(uploadDataButton, false);
-        // TODO disable upload button
+
     }
 
     private void enablePossibleButtons(boolean metadataSynced) {
@@ -180,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (metadataSynced) {
                 setEnabledButton(syncDataButton, true);
                 if (SyncStatusHelper.isThereDataToUpload()) {
-                    // TODO enable upload button
+                
                     setEnabledButton(uploadDataButton, true);
                 }
             }
