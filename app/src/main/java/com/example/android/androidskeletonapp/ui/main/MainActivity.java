@@ -27,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FloatingActionButton syncMetadataButton;
     private FloatingActionButton syncDataButton;
-    // TODO - private FloatingActionButton uploadDataButton;
+    private FloatingActionButton uploadDataButton;
 
     private TextView syncStatusText;
     private ProgressBar progressBar;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         syncMetadataButton = findViewById(R.id.syncMetadataButton);
         syncDataButton = findViewById(R.id.syncDataButton);
         // TODO bind uploadDataButton to "uploadDataButton" view
+        uploadDataButton = findViewById(R.id.uploadDataButton);
 
         syncStatusText = findViewById(R.id.notificator);
         progressBar = findViewById(R.id.syncProgressBar);
@@ -113,15 +115,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             downloadData();
         });
 
+
+
+
         // TODO Listen to uploadDataButton and execute these actions:
+        //DOne
 
-            // TODO Set syncing
-            // TODO Show a snackbar to notify about the action
+        // TODO Set syncing
 
-            // TODO trigger data upload and subscribe (do not subscribe on the main thread!!!)
-            // TODO You have to use, at least: subscribeOn(), observeOn(), doOnComplete(), subscribe()
-            // TODO Call setSyncFinished on complete
+        uploadDataButton.setOnClickListener(view -> {
+            setSyncing();
+            Snackbar.make(view, "A carregar", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            syncStatusText.setText(R.string.uploading_data);
+
+
+            Observable.fromCallable(Sdk.d2().trackedEntityModule().trackedEntityInstances.upload())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnComplete(() -> {
+                        setSyncingFinished();                 })
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribe();
+
+
+        });
+        // TODO Show a snackbar to notify about the action
+
+        // TODO trigger data upload and subscribe (do not subscribe on the main thread!!!)
+        // TODO You have to use, at least: subscribeOn(), observeOn(), doOnComplete(), subscribe()
+        // TODO Call setSyncFinished on complete
+
+
+
     }
+
+
+
 
     private void setSyncing() {
         isSyncing = true;
@@ -140,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void disableAllButtons() {
         setEnabledButton(syncMetadataButton, false);
         setEnabledButton(syncDataButton, false);
+        setEnabledButton(uploadDataButton, false);
         // TODO disable upload button
     }
 
@@ -150,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setEnabledButton(syncDataButton, true);
                 if (SyncStatusHelper.isThereDataToUpload()) {
                     // TODO enable upload button
+                    setEnabledButton(uploadDataButton, true);
                 }
             }
         }
@@ -219,6 +251,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Sdk.d2().trackedEntityModule().downloadTrackedEntityInstances(10, false, false),
                         Sdk.d2().aggregatedModule().data().download()
                 )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete(() -> {
+                            setSyncingFinished();
+                            ActivityStarter.startActivity(this, TrackedEntityInstancesActivity.class, false);
+                        })
+                        .doOnError(Throwable::printStackTrace)
+                        .subscribe());
+    }
+
+    private void uploadData() {
+        compositeDisposable.add(
+                Observable.fromCallable(Sdk.d2().trackedEntityModule().trackedEntityInstances.upload())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnComplete(() -> {
