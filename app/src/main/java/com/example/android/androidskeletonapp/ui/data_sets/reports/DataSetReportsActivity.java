@@ -10,6 +10,7 @@ import com.example.android.androidskeletonapp.R;
 import com.example.android.androidskeletonapp.data.Sdk;
 import com.example.android.androidskeletonapp.ui.base.ListActivity;
 
+import org.hisp.dhis.android.core.dataset.DataSet;
 import org.hisp.dhis.android.core.datavalue.DataSetReport;
 
 public class DataSetReportsActivity extends ListActivity {
@@ -28,5 +29,16 @@ public class DataSetReportsActivity extends ListActivity {
         // TODO Get a LiveData for a PagedList from dataSetReports repository (dataValueModule)
         //  Pass this LiveData to the dataSetAdapter
         //  HINT: look at DataSetsActivity as a template
+
+
+        LiveData<PagedList<DataSetReport>> liveData = Sdk.d2().dataValueModule().dataSetReports
+
+                .getPaged(20);
+
+        liveData.observe(this, dataSetPagedList -> {
+            adapter.submitList(dataSetPagedList);
+            findViewById(R.id.dataSetReportsNotificator).setVisibility(
+                    dataSetPagedList.isEmpty() ? View.VISIBLE : View.GONE);
+        });
     }
 }
