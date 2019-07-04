@@ -26,6 +26,7 @@ public class DataSetReportsAdapter extends PagedListAdapter<DataSetReport, ListI
 
     @NonNull
     @Override
+
     public ListItemWithSyncHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item, parent, false);
